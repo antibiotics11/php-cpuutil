@@ -8,9 +8,13 @@ class Performance {
   public const IA32_PERF_CTL    = 0x0199;
 
   protected function __construct(
+    /** @var int $cpuId cpu identifier */
     public readonly int   $cpuId,
+    /** @var int $performanceState current performance state */
     public readonly int   $performanceState,
+    /** @var int $performanceControl current performance control state */
     public readonly int   $performanceControl,
+    /** @var float $frequency current cpu frequency in MHz */
     public readonly float $frequency
   ) {}
 
@@ -27,7 +31,7 @@ class Performance {
     $frequency        = (($performanceState >> 8) & 0xffff) * $baseFrequency;
 
     $perfCtlMsr         = MSR::read($cpuId, self::IA32_PERF_CTL);
-    $performanceControl = $perfCtlMsr->value & 0xffff;
+    $performanceControl = $perfCtlMsr->value;
 
     return new self($cpuId, $performanceState, $performanceControl, $frequency);
   }
